@@ -1,0 +1,29 @@
+@font-face {
+	font-family: 'Inter';
+	src:
+  url("../fonts/Inter-Regular.woff2") format("woff2"),
+  url('../fonts/Inter-VariableFont_opsz\,wght.ttf') format("truetype");
+	font-style: normal;
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('../fonts/Inter-Bold.woff2') format("woff2");
+	font-style: normal;
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('../fonts/Inter-ExtraBold.woff2') format("woff2");
+	font-style: normal;
+	font-weight: 900;
+}
+
+@font-face {
+  font-family: 'Oddval';
+  src: url('../fonts/oddval_semibold.woff') format('woff');
+  font-style: normal;
+  font-weight: 600;
+}

@@ -1,0 +1,128 @@
+.nav {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav__avatar-container {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  display: inline-block;
+}
+
+.nav__avatar-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('.././images/edit-button.svg') center no-repeat;
+  background-size: 30px 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.nav__avatar-container:hover::after {
+  opacity: 0.8;
+  background-color: rgba(121, 118, 123, 0.493);
+}
+
+.nav__avatar-position {
+  margin-right: 30px;
+}
+
+.nav__avatar {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+
+.nav__avatar:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.nav__name-edit {
+  display: flex;
+  gap: 18px;
+  margin-right: 12px;
+  justify-content: start;
+  align-items: first baseline;
+}
+
+.nav__name {
+  font-weight: 500;
+  font-family: 'Oddval';
+  font-size: 42px;
+  line-height: calc(48/42);
+  margin: 0 0 16px;
+}
+
+.nav__job-title {
+  font-size: 18px;
+}
+
+.nav__button-edit {
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/edit-button.svg);
+}
+
+.nav__button-add {
+  margin-left: auto;
+  width: 150px;
+  height: 50px;
+  border: 2px solid white;
+  background-image: url(../images/add_icon.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media screen and (max-width: 879px) {
+  .nav {
+    padding: 0 24px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .nav__name {
+    font-size: 36px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .nav {
+    height: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 36px;
+  }
+
+  .nav__avatar-position {
+    margin: 0;
+  }
+
+  .nav__container {
+    text-align: center;
+  }
+  .nav__name {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .nav__button-add {
+    width: 100%;
+  }
+}

@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: black;
+  color: white;
+  font-family: Inter, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: #fff;
+}
+
+a:visited {
+  color: #c4c4c4;
+}
+
+a:focus {
+  font-weight: 500;
+}
+
+a:hover {
+  color: #2F80ED;
+  cursor: pointer;
+}
+
+a:active {
+  color: #2F80ED;
+  font-weight: 500;
+}
