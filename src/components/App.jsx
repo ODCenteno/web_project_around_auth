@@ -130,6 +130,12 @@ function App() {
       .catch(console.error());
 };
 
+  function handleLogOut() {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    navigate("/signin", { replace: true });
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={{
@@ -144,6 +150,7 @@ function App() {
           onOpenPopup={handleOpenPopup}
           onClosePopup={handleClosePopup}
           popup={popup}>
+          handleLogOut={handleLogOut}
         </Header>
         <Routes>
           <Route path="/" element={

@@ -8,19 +8,13 @@ import EditProfile from "../Main/Popup/EditProfile/EditProfile.jsx";
 
 
 export default function Header(props) {
-  const { aroundLogo, onOpenPopup, onClosePopup, popup } = props;
+  const { aroundLogo, onOpenPopup, onClosePopup, popup, handleLogOut } = props;
 
   const userContext = useContext(CurrentUserContext);
   const { currentUser, isLoggedIn } = userContext;
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/session-timed-out"); // Hook
-    }
-  }, [isLoggedIn]);
 
   const newCardPopup = {
     title: "Nuevo lugar",
@@ -40,13 +34,17 @@ export default function Header(props) {
     popupId: "avatar-popup",
   };
 
+  const handleClick = () => {
+    handleLogOut();
+  };
+
   return (
     <header className="header page__header">
       <div className="header__logo-container">
         <img src={aroundLogo} alt="Around logo" className="header__logo"></img>
         <div className="header__auth-links">
           {
-            isLoggedIn && <span className="header__email-display">{currentUser.email}</span> && <Link to="/logout" className="header__link header__link_type_logout">Cerrar Sesión</Link>
+            isLoggedIn && <span className="header__email-display">{currentUser.email}</span> && <Link to="/signin" onClick={handleClick} className="header__link header__link_type_logout">Cerrar Sesión</Link>
           }
           { !isLoggedIn && (location.pathname === '/signin') &&
             <Link to="/signup" className="header__link header__link_type_register">Regístrate</Link>
