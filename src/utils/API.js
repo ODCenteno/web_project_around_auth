@@ -48,24 +48,6 @@ class Api {
       });
   }
 
-  // signin(body) {
-  //   return this._callApi("/signin", "POST", body)
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         return Promise.reject(`Error: ${res.status}`);
-  //       }
-  //       return res.json();
-  //     })
-  //     .catch((err) => {
-  //       if (err.status === 400) {
-  //         console.log("Uno de los campos se rellenó de forma incorrecta");
-  //         return;
-  //       }
-
-  //       console.error("Error inesperado:", err.status);
-  //     });
-  // }
-
   saveUserDetails(userDetails) {
     return this._callApi("users/me", "PATCH", {
       name: userDetails.name,

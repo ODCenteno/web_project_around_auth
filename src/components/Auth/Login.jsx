@@ -38,6 +38,8 @@ const Login = ({ handleLogin }) => {
     e.preventDefault();
 
     handleLogin({ email, password });
+    setEmail('');
+    setPassword('');
   }
 
   return (

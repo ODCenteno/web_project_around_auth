@@ -125,9 +125,6 @@ function App() {
         setCurrentUser({ ...currentUser, email: data.email, _id: data._id });
         //setIsLoggedIn(true);
         console.log("Registration successful for user: ", currentUser);
-        //clear form
-        setEmail('');
-        setPassword('');
         navigate("/signin", { replace: true });
       })
       .catch(console.error());
