@@ -5,6 +5,7 @@
 // TODO: Comprueba la validez del token al enviar una solicitud al endpoint /users/me.
 import { useState } from 'react';
 import InfoTooltip from '../Main/Popup/InfoTooltip';
+import Popup from '../Main/Popup/Popup'
 
 const Login = ({ handleLogin }) => {
   const [email, setEmail] = useState('');
@@ -22,6 +23,17 @@ const Login = ({ handleLogin }) => {
     popupId: "failedAuth-popup",
   };
 
+    const handleChange = (e) => {
+    const { type, value } = e.target;
+
+    console.log(type, value);
+    if (type === 'email') {
+      setEmail(value);
+    } else if (type === 'password') {
+      setPassword(value);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,16 +47,16 @@ const Login = ({ handleLogin }) => {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChange}
           className='auth__form__input'
           placeholder="Enter Email: hi@example.com"
-          pattern='^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+          pattern='^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*(\.\w{2,})+$'
           required
         />
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChange}
           className='auth__form__input'
           placeholder="Enter Password"
           required

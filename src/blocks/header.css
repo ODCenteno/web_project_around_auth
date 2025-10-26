@@ -3,9 +3,15 @@
 }
 
 .header__logo-container {
-  max-width: 173px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
+}
+
+.header__auth-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .header__divisor {
@@ -30,6 +36,11 @@
   .header {
     padding-top: 28px;
   }
+  .header__logo-container {
+  max-width: 173px;
+  display: flex;
+  justify-content: space-between;
+}
   .header__nav {
     padding: 0;
   }
