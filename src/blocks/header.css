@@ -4,6 +4,8 @@
 
 .header__logo-container {
   max-width: 173px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .header__divisor {

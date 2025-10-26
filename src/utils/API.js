@@ -30,6 +30,49 @@ class Api {
       });
   }
 
+  authorize(endpoint, body, token) {
+    if (token) {
+      this._headers.authorization = `Bearer ${token}`;
+    }
+    return this._callApi(endpoint, "POST", body)
+      .then((res) => {
+        if (!res.ok) {
+          return Promise.reject(`Error: ${res.status}`);
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        if (err.status === 400) {
+          console.log("Uno de los campos se rellenó de forma incorrecta");
+          return;
+        }
+        if (err.status === 401) {
+          console.log("No se ha encontrado al usuario con el correo electrónico especificado o el usuario no está registrado");
+          return;
+        }
+
+        console.error("Error inesperado:", err.status);
+      });
+  }
+
+  // signin(body) {
+  //   return this._callApi("/signin", "POST", body)
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         return Promise.reject(`Error: ${res.status}`);
+  //       }
+  //       return res.json();
+  //     })
+  //     .catch((err) => {
+  //       if (err.status === 400) {
+  //         console.log("Uno de los campos se rellenó de forma incorrecta");
+  //         return;
+  //       }
+
+  //       console.error("Error inesperado:", err.status);
+  //     });
+  // }
+
   saveUserDetails(userDetails) {
     return this._callApi("users/me", "PATCH", {
       name: userDetails.name,
@@ -70,7 +113,7 @@ class Api {
   }
 }
 
-const api = new Api({
+const apiData = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1/",
   headers: {
     authorization: "a5cb0d16-6952-4c7a-a5a0-b8b568da9065",
@@ -78,4 +121,11 @@ const api = new Api({
   },
 });
 
-export default api;
+const apiAuth = new Api({
+  baseUrl: "https://se-register-api.en.tripleten-services.com/v1",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export { apiData as api, apiAuth };

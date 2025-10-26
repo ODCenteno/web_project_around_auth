@@ -1,11 +1,17 @@
-import { useEffect, useState } from 'react'
-import CurrentUserContext from '../contexts/CurrentUserContext.js'
-import logo from '../../public/logo.svg'
-import '../index.css'
-import Footer from './Footer/Footer.jsx'
-import Main from './main/Main.jsx'
-import Header from './header/Header.jsx'
-import api from '../utils/API.js'
+import { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
+import logo from '../../public/logo.svg';
+import '../index.css';
+import Footer from './Footer/Footer.jsx';
+import Main from './main/Main.jsx';
+import Header from './header/Header.jsx';
+import { api, apiAuth } from '../utils/API.js';
+import { signin, signup } from '../utils/auth.js';
+import { setToken, getToken } from '../utils/token.js';
+import ProtectedRoute from './ProtectedRoute.jsx';
+import Login from './Auth/Login.jsx';
+import Register from './Auth/Register.jsx';
 
 // TODO: implementar una versión móvil de la aplicación
 
@@ -21,6 +27,9 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [popup, setPopup] = useState(null);
   const [cards, setCards] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -86,19 +95,87 @@ function App() {
     handleClosePopup();
   }
 
+  function handleLogin({ password, email }) {
+    if (!email || !password) {
+      return;
+    }
+
+    signin({ password, email })
+    .then(({token}) => {
+      if (token) {
+        setToken(token);
+        setIsLoggedIn(true);
+        navigate("/", { replace: true });
+      }
+    })
+    .catch((err) => console.log(err));
+  };
+
+  function handleRegister({ password, email }){
+    if (!email || !password) {
+      return;
+    }
+
+    signup({ password, email })
+      .then(({ data }) => {
+        console.log(data);
+        if (!data) {
+          throw new Error("No user data found");
+        }
+        setCurrentUser({ ...currentUser, email: data.email, _id: data._id });
+        setIsLoggedIn(true);
+        navigate("/", { replace: true });
+      })
+      .catch(console.error());
+};
+
   return (
     <div className="page">
-      <CurrentUserContext.Provider value={{ currentUser, handleUpdateUser,  onUpdateAvatar, handleAddPlaceSubmit}}>
+      <CurrentUserContext.Provider value={{
+        currentUser,
+        handleUpdateUser,
+        onUpdateAvatar,
+        handleAddPlaceSubmit,
+        isLoggedIn
+        }}>
         <Header
           aroundLogo={logo}
           onOpenPopup={handleOpenPopup}
           onClosePopup={handleClosePopup}
           popup={popup}>
         </Header>
-        <Main
-          cards={cards}
-          onCardLike={handleCardLike} onCardDelete={handleCardDelete}>
-        </Main>
+        <Routes>
+          <Route path="/" element={
+            <Main
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}>
+            </Main>
+          }>
+          </Route>
+          <Route path="/signin" element={
+            <Login className="auth__container"
+              handleLogin={handleLogin}
+              onOpenPopup={handleOpenPopup}
+              onClosePopup={handleClosePopup}
+              popup={popup}>
+            </Login>
+          }>
+          </Route>
+          <Route path="/signup" element={
+            <Register className="auth__container"
+              handleRegister={handleRegister} />
+          }></Route>
+          <Route
+          path="*"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/" replace/>
+            ) : (
+              <Navigate to="/signin" replace/>
+            )
+          }></Route>
+        </Routes>
         <Footer></Footer>
       </CurrentUserContext.Provider>
     </div>

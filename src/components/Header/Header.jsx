@@ -1,15 +1,26 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js"
 import Popup from '../main/Popup/Popup.jsx'
 import NewCard from "../Main/Popup/NewCard/NewCard.jsx";
 import EditAvatar from "../Main/Popup/EditAvatar/EditAvatar.jsx";
 import EditProfile from "../Main/Popup/EditProfile/EditProfile.jsx";
 
+
 export default function Header(props) {
   const { aroundLogo, onOpenPopup, onClosePopup, popup } = props;
 
   const userContext = useContext(CurrentUserContext);
-  const { currentUser } = userContext;
+  const { currentUser, isLoggedIn } = userContext;
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/session-timed-out"); // Hook
+    }
+  }, [isLoggedIn]);
 
   const newCardPopup = {
     title: "Nuevo lugar",
@@ -33,6 +44,17 @@ export default function Header(props) {
     <header className="header page__header">
       <div className="header__logo-container">
         <img src={aroundLogo} alt="Around logo" className="header__logo"></img>
+        <div className="header__auth-links">
+          {
+            isLoggedIn && <span className="header__email-display">{currentUser.email}</span>
+          }
+          { !isLoggedIn && (location.pathname === '/signin') &&
+            <Link to="/signup" className="header__link header__link_type_register">Regístrate</Link>
+          }
+          { !isLoggedIn && (location.pathname === '/signup') &&
+            <Link to="/login" className="header__link header__link_type_login">Iniciar Sesión</Link>
+          }
+        </div>
       </div>
       <hr className="header__divisor"></hr>
       <nav className="nav header__nav">

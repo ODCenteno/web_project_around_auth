@@ -7,3 +7,14 @@ Vamos a implementar dos nuevas rutas para usuarios no autorizados en un archivo 
 Si un usuario no autorizado visita la aplicación, debería ser redirigido a la página de inicio de sesión, independientemente de la ruta desde la que accedió.
 
 */
+import { apiAuth } from "./API";
+
+const signup = ({ password, email }) => {
+  return apiAuth.authorize("/signup", { password, email });
+};
+
+const signin = ({ password, email, token = "" }) => {
+  return apiAuth.authorize("/signin", { password, email }, token);
+};
+
+export { signup, signin };
