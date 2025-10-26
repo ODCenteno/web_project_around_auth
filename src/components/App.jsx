@@ -6,7 +6,7 @@ import '../index.css';
 import Footer from './Footer/Footer.jsx';
 import Main from './main/Main.jsx';
 import Header from './header/Header.jsx';
-import { api, apiAuth } from '../utils/API.js';
+import { api } from '../utils/API.js';
 import { signin, signup } from '../utils/auth.js';
 import { setToken, getToken } from '../utils/token.js';
 import ProtectedRoute from './ProtectedRoute.jsx';
@@ -123,8 +123,12 @@ function App() {
           throw new Error("No user data found");
         }
         setCurrentUser({ ...currentUser, email: data.email, _id: data._id });
-        setIsLoggedIn(true);
-        navigate("/", { replace: true });
+        //setIsLoggedIn(true);
+        console.log("Registration successful for user: ", currentUser);
+        //clear form
+        setEmail('');
+        setPassword('');
+        navigate("/signin", { replace: true });
       })
       .catch(console.error());
 };
@@ -164,7 +168,11 @@ function App() {
           </Route>
           <Route path="/signup" element={
             <Register className="auth__container"
-              handleRegister={handleRegister} />
+              handleRegister={handleRegister}
+              popup={popup}
+              onOpenPopup={handleOpenPopup}
+              onClosePopup={handleClosePopup}
+            />
           }></Route>
           <Route
           path="*"

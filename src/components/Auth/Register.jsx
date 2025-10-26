@@ -5,18 +5,18 @@ import InfoTooltip from '../Main/Popup/InfoTooltip.jsx';
 import Popup from '../Main/Popup/Popup.jsx';
 // TODO: import RegisterPop from '';
 
-const Register = ({ handleRegister, popup, onClosePopup }) => {
+const Register = ({ handleRegister, popup, onOpenPopup,onClosePopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { type, value } = e.target;
 
-    if (name === 'email') {
+    if (type === 'email') {
       setEmail(value);
-    } else if (name === 'password') {
+    } else if (type === 'password') {
       setPassword(value);
     }
   };

@@ -9,12 +9,12 @@ Si un usuario no autorizado visita la aplicación, debería ser redirigido a la 
 */
 import { apiAuth } from "./API";
 
-const signup = ({ password, email }) => {
-  return apiAuth.authorize("/signup", { password, email });
+const signup = (credentials) => {
+  return apiAuth.authorize("/signup", credentials);
 };
 
-const signin = ({ password, email, token = "" }) => {
-  return apiAuth.authorize("/signin", { password, email }, token);
+const signin = ({ password, email }) => {
+  return apiAuth.authorize("/signin", { password, email });
 };
 
 export { signup, signin };

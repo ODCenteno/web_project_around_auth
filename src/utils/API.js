@@ -9,14 +9,13 @@ class Api {
       method: method || "GET",
       headers: this._headers,
       body: body ? JSON.stringify(body) : undefined,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch: ", res.status);
-        }
-        return res.json();
-      })
-      .catch((err) => console.error(err));
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch: ", res.status);
+      }
+      return res.json();
+    });
+    //.catch((err) => console.error(err));
   }
 
   getUserInfo() {
@@ -30,16 +29,10 @@ class Api {
       });
   }
 
-  authorize(endpoint, body, token) {
-    if (token) {
-      this._headers.authorization = `Bearer ${token}`;
-    }
+  authorize(endpoint, body) {
     return this._callApi(endpoint, "POST", body)
-      .then((res) => {
-        if (!res.ok) {
-          return Promise.reject(`Error: ${res.status}`);
-        }
-        return res.json();
+      .then((userData) => {
+        return userData;
       })
       .catch((err) => {
         if (err.status === 400) {
