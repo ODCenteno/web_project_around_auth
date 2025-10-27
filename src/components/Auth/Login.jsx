@@ -7,15 +7,9 @@ import { useState } from 'react';
 import InfoTooltip from '../Main/Popup/InfoTooltip';
 import Popup from '../Main/Popup/Popup'
 
-const Login = ({ handleLogin }) => {
+const Login = ({ handleLogin, popup, onClosePopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const authSuccessPopup = {
-    title: '¡Correcto! Te estás registrando correctamente',
-    children: <InfoTooltip isSuccess={true} />,
-    popupId: "successAuth-popup",
-  };
 
   const authFailedPopup = {
     title: "Uy algo salió mal. Por favor, inténtalo de nuevo.",
@@ -65,6 +59,14 @@ const Login = ({ handleLogin }) => {
         />
         <button type="submit" className='auth__button'>Login</button>
       </form>
+      {popup && (
+        <Popup
+            popupId={popup.popupId}
+            onClose={onClosePopup}
+            title={popup.title}>
+          {popup.children}
+        </Popup>
+      )}
     </div>
   );
 }

@@ -60,6 +60,13 @@
   color: black;
 }
 
+.popup__title-tooltip {
+  font-weight: 900;
+  font-size: 24px;
+  color: black;
+  text-align: center;
+}
+
 .popup__fields {
   padding: 0;
   width: 100%;

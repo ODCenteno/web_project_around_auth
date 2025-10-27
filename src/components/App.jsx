@@ -12,6 +12,7 @@ import { setToken, getToken, removeToken } from '../utils/token.js';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import Login from './Auth/Login.jsx';
 import Register from './Auth/Register.jsx';
+import InfoTooltip from './Main/Popup/InfoTooltip.jsx';
 
 // TODO: implementar una versión móvil de la aplicación
 
@@ -69,7 +70,7 @@ function App() {
       navigate("/", { replace: true });
 
       const fetchUser = async () => {
-        await api.getUserInfo().then((userRes) => {
+        await api.getUserInfo(token).then((userRes) => {
           setCurrentUser(userRes);
         });
       }
@@ -132,6 +133,12 @@ function App() {
 
         console.log("Registration successful for user: ", currentUser);
         navigate("/signin", { replace: true });
+        setPopup(
+          {
+            children: <InfoTooltip isSuccess={true} />,
+            popupId: "successAuth-popup",
+          }
+        )
       })
       .catch(console.error());
 };
@@ -153,7 +160,7 @@ function App() {
         }}>
         <Header
           aroundLogo={logo}
-          handleLogOut={handleLogOut}
+          handleLogOut={handleLogOut}>
         </Header>
         <Routes>
           <Route path="/" element={

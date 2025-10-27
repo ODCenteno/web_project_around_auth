@@ -9,10 +9,10 @@ import EditProfile from "../Main/Popup/EditProfile/EditProfile.jsx";
 
 export default function Main(props) {
   const userContext = useContext(CurrentUserContext);
-  const { currentUser, isLoggedIn } = userContext;
+  const { currentUser } = userContext;
 
 
-  const { aroundLogo, onOpenPopup, onClosePopup, popup, handleLogOut, cards, onCardDelete, onCardLike } = props;
+  const { onOpenPopup, onClosePopup, popup, cards, onCardDelete, onCardLike } = props;
 
     const newCardPopup = {
       title: "Nuevo lugar",
