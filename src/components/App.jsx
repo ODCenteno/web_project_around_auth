@@ -8,7 +8,7 @@ import Main from './main/Main.jsx';
 import Header from './header/Header.jsx';
 import { api } from '../utils/API.js';
 import { signin, signup } from '../utils/auth.js';
-import { setToken, getToken } from '../utils/token.js';
+import { setToken, getToken, removeToken } from '../utils/token.js';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import Login from './Auth/Login.jsx';
 import Register from './Auth/Register.jsx';
@@ -63,12 +63,18 @@ function App() {
   }
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await api.getUserInfo().then((userRes) => {
-        setCurrentUser(userRes);
-      });
+    const token = getToken();
+    if (token) {
+      setIsLoggedIn(true);
+      navigate("/", { replace: true });
+
+      const fetchUser = async () => {
+        await api.getUserInfo().then((userRes) => {
+          setCurrentUser(userRes);
+        });
+      }
+      fetchUser();
     }
-    fetchUser();
   }, [])
 
   const handleUpdateUser = (data) => {
@@ -123,7 +129,7 @@ function App() {
           throw new Error("No user data found");
         }
         setCurrentUser({ ...currentUser, email: data.email, _id: data._id });
-        //setIsLoggedIn(true);
+
         console.log("Registration successful for user: ", currentUser);
         navigate("/signin", { replace: true });
       })
@@ -131,7 +137,7 @@ function App() {
 };
 
   function handleLogOut() {
-    localStorage.removeItem("jwt");
+    removeToken();
     setIsLoggedIn(false);
     navigate("/signin", { replace: true });
   }
@@ -143,13 +149,10 @@ function App() {
         handleUpdateUser,
         onUpdateAvatar,
         handleAddPlaceSubmit,
-        isLoggedIn
+        isLoggedIn,
         }}>
         <Header
           aroundLogo={logo}
-          onOpenPopup={handleOpenPopup}
-          onClosePopup={handleClosePopup}
-          popup={popup}>
           handleLogOut={handleLogOut}
         </Header>
         <Routes>
@@ -157,7 +160,10 @@ function App() {
             <Main
               cards={cards}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}>
+              onCardDelete={handleCardDelete}
+              onOpenPopup={handleOpenPopup}
+              onClosePopup={handleClosePopup}
+              popup={popup}>
             </Main>
           }>
           </Route>

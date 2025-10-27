@@ -18,7 +18,10 @@ class Api {
     //.catch((err) => console.error(err));
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
+    if (token) {
+      this._headers.authorization = `Bearer ${token}`;
+    }
     return this._callApi("users/me")
       .then((user) => {
         return user;
