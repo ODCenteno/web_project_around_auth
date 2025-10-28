@@ -1,21 +1,12 @@
-// TODO: el componente para la autorización de usuarios con las variables de estado necesarias.
-
-// TODO: para almacenar y acceder al token cuando trabajes en un sitio. En visitas repetidas, los usuarios no tendrían por qué iniciar sesión.
-
 // TODO: Comprueba la validez del token al enviar una solicitud al endpoint /users/me.
 import { useState } from 'react';
 import InfoTooltip from '../Main/Popup/InfoTooltip';
 import Popup from '../Main/Popup/Popup'
+import { Link } from 'react-router-dom';
 
 const Login = ({ handleLogin, popup, onClosePopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const authFailedPopup = {
-    title: "Uy algo salió mal. Por favor, inténtalo de nuevo.",
-    children: <InfoTooltip isSuccess={false} />,
-    popupId: "failedAuth-popup",
-  };
 
     const handleChange = (e) => {
     const { type, value } = e.target;
@@ -58,6 +49,9 @@ const Login = ({ handleLogin, popup, onClosePopup }) => {
           required
         />
         <button type="submit" className='auth__button'>Login</button>
+        <div className='auth__link-container'>
+          <Link to="/signup" className="auth__link">¿Aún no eres miembro? Regístrate aquí</Link>
+        </div>
       </form>
       {popup && (
         <Popup

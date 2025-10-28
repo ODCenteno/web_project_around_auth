@@ -19,9 +19,6 @@ import InfoTooltip from './Main/Popup/InfoTooltip.jsx';
 /*
 TODO: Mobile: El encabezado debe ser diferente para los usuarios autorizados y los no autorizados, según el diseño de Figma.
 TODO: Mobile: Utiliza tu marcado de componentes de formulario y ventanas modales para implementar InfoTooltip, Login y Register.
-TODO: En este proyecto, necesitarás implementar la funcionalidad del registro y la autorización. Para ello, tendrás que expandir alguno de los componentes que hayas utilizado en tu proyecto en los sprints anteriores.
-TODO: Las funciones, la habilitación de solicitudes API relacionadas con el registro y la autorización deben estar ubicadas en el archivo auth.js en la carpeta /utils.
-
 */
 
 function App() {
@@ -140,7 +137,15 @@ function App() {
           }
         )
       })
-      .catch(console.error());
+      .catch((err => {
+        console.log("Registration error: ", err);
+        setPopup(
+          {
+            children: <InfoTooltip isSuccess={false} />,
+            popupId: "failedAuth-popup",
+          }
+        )
+      }));
 };
 
   function handleLogOut() {

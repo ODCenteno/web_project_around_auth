@@ -1,15 +1,11 @@
 // TODO: el componente para el registro de los usuarios con las variables de estado necesarias.
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import InfoTooltip from '../Main/Popup/InfoTooltip.jsx';
+import { Link } from 'react-router-dom';
 import Popup from '../Main/Popup/Popup.jsx';
-// TODO: import RegisterPop from '';
 
-const Register = ({ handleRegister, popup, onOpenPopup,onClosePopup }) => {
+const Register = ({ handleRegister, popup, onClosePopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { type, value } = e.target;
@@ -49,6 +45,9 @@ const Register = ({ handleRegister, popup, onOpenPopup,onClosePopup }) => {
           required
         />
         <button type="submit" className='auth__button'>Register</button>
+        <div className='auth__link-container'>
+          <Link to="/signin" className="auth__link">¿Ya eres miembro? Inicia sesión aquí</Link>
+        </div>
       </form>
       {popup && (
         <Popup
