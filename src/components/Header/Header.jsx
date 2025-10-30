@@ -7,7 +7,7 @@ export default function Header(props) {
   const { handleLogOut, aroundLogo } = props;
 
   const userContext = useContext(CurrentUserContext);
-  const { currentUser, isLoggedIn } = userContext;
+  const { userEmail, isLoggedIn } = userContext;
 
   const location = useLocation();
 
@@ -21,7 +21,7 @@ export default function Header(props) {
         <img src={aroundLogo} alt="Around logo" className="header__logo"></img>
         <div className="header__auth-links">
           {
-            isLoggedIn && <span className="header__link">{currentUser.email || "Email"}</span>
+            isLoggedIn && <span className="header__link">{userEmail || "Email"}</span>
           }
           {
             isLoggedIn && <Link to="/signin" onClick={handleClick} className="header__link header__link_type_logout">Cerrar Sesión</Link>

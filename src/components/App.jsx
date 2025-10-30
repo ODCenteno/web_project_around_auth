@@ -26,16 +26,46 @@ function App() {
   const [popup, setPopup] = useState(null);
   const [cards, setCards] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   const navigate = useNavigate();
 
+  const fetchUser = async () => {
+    const userDetails = await api.getUserInfo().then((userRes) => {
+      console.log("User information fetched successfully:", userRes);
+      return userRes;
+    });
+    return userDetails;
+  }
+
+  const fetchCards = async () => {
+    const cardsRes = await api.getCards();
+    return cardsRes;
+  }
+
   useEffect(() => {
-    const fetchCards = async () => {
-      const cardsRes = await api.getCards();
-      setCards(cardsRes);
+    const token = getToken();
+
+    if (token) {
+      console.log("Token found");
+      setIsLoggedIn(true);
+
+      navigate("/", { replace: true });
+    } else {
+      console.log("No token found");
+      navigate("/signin", { replace: true });
     }
-    fetchCards();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    fetchUser().then((userDetails) => {
+      setCurrentUser({...currentUser,...userDetails});
+    });
+
+    fetchCards().then((cardsData) => {
+      setCards(cardsData);
+    });
+  }, [isLoggedIn]);
 
   const handleCardLike = async (card) => {
     const isLiked = card.isLiked;
@@ -59,21 +89,6 @@ function App() {
         .catch((error) => console.error(error));
     })();
   }
-
-  useEffect(() => {
-    const token = getToken();
-    if (token) {
-      setIsLoggedIn(true);
-      navigate("/", { replace: true });
-
-      const fetchUser = async () => {
-        await api.getUserInfo(token).then((userRes) => {
-          setCurrentUser(userRes);
-        });
-      }
-      fetchUser();
-    }
-  }, [])
 
   const handleUpdateUser = (data) => {
     (async () => {
@@ -100,42 +115,39 @@ function App() {
   }
 
   function handleLogin({ password, email }) {
-    if (!email || !password) {
-      return;
-    }
-
     signin({ password, email })
     .then(({token}) => {
       if (token) {
         setToken(token);
         setIsLoggedIn(true);
+        // TODO: Guardar el email del usuario en el estado global
+        setUserEmail(email);
+        console.log("Login successful for user: ", email);
         navigate("/", { replace: true });
       }
     })
     .catch((err) => console.log(err));
   };
 
-  function handleRegister({ password, email }){
-    if (!email || !password) {
-      return;
-    }
-
+  function handleRegister({ password, email }) {
     signup({ password, email })
       .then(({ data }) => {
         console.log(data);
-        if (!data) {
-          throw new Error("No user data found");
-        }
-        setCurrentUser({ ...currentUser, email: data.email, _id: data._id });
 
-        console.log("Registration successful for user: ", currentUser);
-        navigate("/signin", { replace: true });
+        setCurrentUser({
+          email: data.email,
+          _id: data._id,
+          ...currentUser,
+        });
+
         setPopup(
           {
             children: <InfoTooltip isSuccess={true} />,
             popupId: "successAuth-popup",
           }
         )
+        console.log("Registration successful for user: ", currentUser);
+        navigate("/signin", { replace: true });
       })
       .catch((err => {
         console.log("Registration error: ", err);
@@ -162,6 +174,7 @@ function App() {
         onUpdateAvatar,
         handleAddPlaceSubmit,
         isLoggedIn,
+        userEmail
         }}>
         <Header
           aroundLogo={logo}
@@ -169,14 +182,16 @@ function App() {
         </Header>
         <Routes>
           <Route path="/" element={
-            <Main
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              onOpenPopup={handleOpenPopup}
-              onClosePopup={handleClosePopup}
-              popup={popup}>
-            </Main>
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Main
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                onOpenPopup={handleOpenPopup}
+                onClosePopup={handleClosePopup}
+                popup={popup}>
+              </Main>
+            </ProtectedRoute>
           }>
           </Route>
           <Route path="/signin" element={
@@ -208,6 +223,7 @@ function App() {
         </Routes>
         <Footer></Footer>
       </CurrentUserContext.Provider>
+
     </div>
   )
 }

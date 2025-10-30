@@ -9,13 +9,37 @@ class Api {
       method: method || "GET",
       headers: this._headers,
       body: body ? JSON.stringify(body) : undefined,
-    }).then((res) => {
-      if (!res.ok) {
-        throw new Error("Failed to fetch: ", res.status);
-      }
-      return res.json();
-    });
-    //.catch((err) => console.error(err));
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch: ", res.status);
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        return Promise.reject(err.status);
+      });
+  }
+
+  authorize(endpoint, body) {
+    return this._callApi(endpoint, "POST", body)
+      .then((userData) => {
+        return userData;
+      })
+      .catch((err) => {
+        console.log("Error en la autorización:", err);
+        if (err.status === 400) {
+          console.log("Uno de los campos se rellenó de forma incorrecta");
+          return;
+        }
+        if (err === 401) {
+          console.log("No se ha encontrado al usuario con el correo electrónico especificado o el usuario no está registrado");
+          return;
+        }
+
+        console.error("Error inesperado:", err.status);
+        return;
+      });
   }
 
   getUserInfo(token) {
@@ -29,25 +53,6 @@ class Api {
       .catch((error) => {
         console.error(error);
         return { name: "", description: "" };
-      });
-  }
-
-  authorize(endpoint, body) {
-    return this._callApi(endpoint, "POST", body)
-      .then((userData) => {
-        return userData;
-      })
-      .catch((err) => {
-        if (err.status === 400) {
-          console.log("Uno de los campos se rellenó de forma incorrecta");
-          return;
-        }
-        if (err.status === 401) {
-          console.log("No se ha encontrado al usuario con el correo electrónico especificado o el usuario no está registrado");
-          return;
-        }
-
-        console.error("Error inesperado:", err.status);
       });
   }
 

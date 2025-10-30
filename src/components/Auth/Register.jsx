@@ -1,7 +1,7 @@
-// TODO: el componente para el registro de los usuarios con las variables de estado necesarias.
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Popup from '../Main/Popup/Popup.jsx';
+// import Popup from '../Main/Popup/Popup.jsx';
 
 const Register = ({ handleRegister, popup, onClosePopup }) => {
   const [email, setEmail] = useState('');

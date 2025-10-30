@@ -1,10 +1,10 @@
-// TODO: utiliza este componente para proteger la ruta / de tal modo que los usuarios no autorizados no puedan acceder a ella.
+
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ isLoggedIn }) => {
+const ProtectedRoute = ({ isLoggedIn, children }) => {
   return (
     <>
-      {isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />}
+      {isLoggedIn ? children : <Navigate to="/signin" replace />}
     </>
   );
 };
