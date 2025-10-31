@@ -7,7 +7,7 @@ import Footer from './Footer/Footer.jsx';
 import Main from './main/Main.jsx';
 import Header from './header/Header.jsx';
 import { api } from '../utils/API.js';
-import { signin, signup } from '../utils/auth.js';
+import { checkToken, signin, signup } from '../utils/auth.js';
 import { setToken, getToken, removeToken } from '../utils/token.js';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import Login from './Auth/Login.jsx';
@@ -43,18 +43,33 @@ function App() {
     return cardsRes;
   }
 
-  useEffect(() => {
+  async function verifyToken() {
     const token = getToken();
-
     if (token) {
       console.log("Token found");
+      const { data } = await checkToken(token);
+      setUserEmail(data.email);
+      setCurrentUser({
+        ...currentUser,
+        "email": data.email,
+        "_id": data._id,
+      });
+    }
+    return token;
+  };
+
+  useEffect(() => {
+    verifyToken().then((token) => {
+    if (token) {
       setIsLoggedIn(true);
 
       navigate("/", { replace: true });
+      console.log("Token is valid for user:", currentUser.email);
     } else {
       console.log("No token found");
       navigate("/signin", { replace: true });
     }
+  });
   }, []);
 
   useEffect(() => {

@@ -22,9 +22,7 @@ const Login = ({ handleLogin, popup, onClosePopup }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    handleLogin({ email, password });
-    setEmail('');
-    setPassword('');
+    handleLogin({ password, email });
   }
 
   return (

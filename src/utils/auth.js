@@ -17,4 +17,10 @@ const signin = ({ password, email }) => {
   return apiAuth.authorize("/signin", { password, email });
 };
 
-export { signup, signin };
+const checkToken = (token) => {
+  return apiAuth.getUserInfo(token).then((userData) => {
+    return userData;
+  });
+};
+
+export { signup, signin, checkToken };

@@ -17,7 +17,7 @@ class Api {
         return res.json();
       })
       .catch((err) => {
-        return Promise.reject(err.status);
+        return Promise.reject(err);
       });
   }
 
@@ -84,11 +84,11 @@ class Api {
   }
 
   addLike(cardId) {
-    return this._callApi(`/cards/${cardId}/likes`, "PUT");
+    return this._callApi(`cards/${cardId}/likes`, "PUT");
   }
 
   removeLike(cardId) {
-    return this._callApi(`/cards/${cardId}/likes`, "DELETE");
+    return this._callApi(`cards/${cardId}/likes`, "DELETE");
   }
 
   changeLikeCardStatus(cardId, isLiked) {
@@ -105,7 +105,7 @@ const apiData = new Api({
 });
 
 const apiAuth = new Api({
-  baseUrl: "https://se-register-api.en.tripleten-services.com/v1",
+  baseUrl: "https://se-register-api.en.tripleten-services.com/v1/",
   headers: {
     "Content-Type": "application/json",
   },
