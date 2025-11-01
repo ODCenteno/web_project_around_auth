@@ -37,7 +37,7 @@
     padding-top: 28px;
   }
   .header__logo-container {
-  max-width: 173px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
 }

@@ -14,13 +14,6 @@ import Login from './Auth/Login.jsx';
 import Register from './Auth/Register.jsx';
 import InfoTooltip from './Main/Popup/InfoTooltip.jsx';
 
-// TODO: implementar una versión móvil de la aplicación
-
-/*
-TODO: Mobile: El encabezado debe ser diferente para los usuarios autorizados y los no autorizados, según el diseño de Figma.
-TODO: Mobile: Utiliza tu marcado de componentes de formulario y ventanas modales para implementar InfoTooltip, Login y Register.
-*/
-
 function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [popup, setPopup] = useState(null);
@@ -135,10 +128,9 @@ function App() {
       if (token) {
         setToken(token);
         setIsLoggedIn(true);
-        // TODO: Guardar el email del usuario en el estado global
         setUserEmail(email);
-        console.log("Login successful for user: ", email);
-        navigate("/", { replace: true });
+        const redirectPath = location.state?.from?.pathname || "/";
+        navigate(redirectPath, { replace: true });
       }
     })
     .catch((err) => console.log(err));
