@@ -1,17 +1,14 @@
-// TODO: Comprueba la validez del token al enviar una solicitud al endpoint /users/me.
 import { useState } from 'react';
-import InfoTooltip from '../Main/Popup/InfoTooltip';
-import Popup from '../Main/Popup/Popup'
 import { Link } from 'react-router-dom';
+import Popup from '../Main/Popup/Popup'
 
-const Login = ({ handleLogin, popup, onClosePopup }) => {
+const Login = ({ handleLogin, popup, onClosePopup, loginError }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
     const { type, value } = e.target;
 
-    console.log(type, value);
     if (type === 'email') {
       setEmail(value);
     } else if (type === 'password') {
@@ -28,7 +25,7 @@ const Login = ({ handleLogin, popup, onClosePopup }) => {
   return (
     <div className="auth">
       <h2 className='auth__title'>Iniciar sesión</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='auth__form'>
         <input
           type="email"
           value={email}
@@ -46,6 +43,9 @@ const Login = ({ handleLogin, popup, onClosePopup }) => {
           placeholder="Enter Password"
           required
         />
+        {
+          loginError && (<p className="auth__error-message">{loginError}</p>)
+        }
         <button type="submit" className='auth__button'>Login</button>
         <div className='auth__link-container'>
           <Link to="/signup" className="auth__link">¿Aún no eres miembro? Regístrate aquí</Link>

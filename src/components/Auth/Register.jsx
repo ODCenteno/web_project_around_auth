@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import Popup from '../Main/Popup/Popup.jsx';
+import Popup from '../Main/Popup/Popup';
 
 const Register = ({ handleRegister, popup, onClosePopup }) => {
   const [email, setEmail] = useState('');

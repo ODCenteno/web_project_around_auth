@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import CurrentUserContext from '../contexts/CurrentUserContext.js';
-import logo from '../../public/logo.svg';
-import '../index.css';
-import Footer from './Footer/Footer.jsx';
-import Main from './main/Main.jsx';
-import Header from './header/Header.jsx';
 import { api } from '../utils/API.js';
 import { checkToken, signin, signup } from '../utils/auth.js';
 import { setToken, getToken, removeToken } from '../utils/token.js';
+import '../index.css';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
+import logo from '../../public/logo.svg';
+import Header from './header/Header.jsx';
+import Main from './main/Main.jsx';
+import Footer from './Footer/Footer.jsx';
 import Login from './Auth/Login.jsx';
 import Register from './Auth/Register.jsx';
 import InfoTooltip from './Main/Popup/InfoTooltip.jsx';
@@ -20,12 +20,12 @@ function App() {
   const [cards, setCards] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [loginError, setLoginError] = useState(null);
 
   const navigate = useNavigate();
 
   const fetchUser = async () => {
     const userDetails = await api.getUserInfo().then((userRes) => {
-      console.log("User information fetched successfully:", userRes);
       return userRes;
     });
     return userDetails;
@@ -39,7 +39,6 @@ function App() {
   async function verifyToken() {
     const token = getToken();
     if (token) {
-      console.log("Token found");
       const { data } = await checkToken(token);
       setUserEmail(data.email);
       setCurrentUser({
@@ -57,9 +56,7 @@ function App() {
       setIsLoggedIn(true);
 
       navigate("/", { replace: true });
-      console.log("Token is valid for user:", currentUser.email);
     } else {
-      console.log("No token found");
       navigate("/signin", { replace: true });
     }
   });
@@ -73,7 +70,7 @@ function App() {
     fetchCards().then((cardsData) => {
       setCards(cardsData);
     });
-  }, [isLoggedIn]);
+  }, []);
 
   const handleCardLike = async (card) => {
     const isLiked = card.isLiked;
@@ -108,6 +105,12 @@ function App() {
     })();
   };
 
+  function onUpdateAvatar(avatar) {
+    api.saveAvatar(avatar).then((user) => setCurrentUser(user)
+    );
+    handleClosePopup();
+  }
+
   function handleOpenPopup(popup) {
     setPopup(popup);
   }
@@ -116,13 +119,8 @@ function App() {
     setPopup(null);
   }
 
-  function onUpdateAvatar(avatar) {
-    api.saveAvatar(avatar).then((user) => setCurrentUser(user)
-    );
-    handleClosePopup();
-  }
-
   function handleLogin({ password, email }) {
+    setLoginError(null);
     signin({ password, email })
     .then(({token}) => {
       if (token) {
@@ -133,13 +131,29 @@ function App() {
         navigate(redirectPath, { replace: true });
       }
     })
-    .catch((err) => console.log(err));
+    .catch((res) => {
+      if (res.status === 400) {
+        setLoginError("Uno de los campos se rellenó de forma incorrecta");
+        return;
+      }
+      if (res.status === 401) {
+        setLoginError("No se ha encontrado al usuario con el correo electrónico especificado o el usuario no está registrado");
+        return;
+      }
+
+      setPopup(
+        {
+          children: <InfoTooltip isSuccess={false} />,
+          popupId: "failedAuth-popup",
+        }
+      )
+      return;
+    });
   };
 
   function handleRegister({ password, email }) {
     signup({ password, email })
       .then(({ data }) => {
-        console.log(data);
 
         setCurrentUser({
           email: data.email,
@@ -147,25 +161,25 @@ function App() {
           ...currentUser,
         });
 
+        navigate("/signin", { replace: true });
+      })
+      .then(() => {
         setPopup(
           {
             children: <InfoTooltip isSuccess={true} />,
             popupId: "successAuth-popup",
           }
-        )
-        console.log("Registration successful for user: ", currentUser);
-        navigate("/signin", { replace: true });
+        );
       })
-      .catch((err => {
-        console.log("Registration error: ", err);
+      .catch(() => {
         setPopup(
           {
             children: <InfoTooltip isSuccess={false} />,
             popupId: "failedAuth-popup",
           }
         )
-      }));
-};
+      });
+  }
 
   function handleLogOut() {
     removeToken();
@@ -181,7 +195,8 @@ function App() {
         onUpdateAvatar,
         handleAddPlaceSubmit,
         isLoggedIn,
-        userEmail
+        userEmail,
+        loginError
         }}>
         <Header
           aroundLogo={logo}
@@ -206,7 +221,8 @@ function App() {
               handleLogin={handleLogin}
               onOpenPopup={handleOpenPopup}
               onClosePopup={handleClosePopup}
-              popup={popup}>
+              popup={popup}
+              loginError={loginError}>
             </Login>
           }>
           </Route>
